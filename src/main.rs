@@ -69,18 +69,24 @@ pub fn make_16x32_blocks(bytes: &Vec<u8>) -> Vec<Vec<u32>>{
 }
 
 fn main() {
+    //bytes from the message
     let mut start_bytes = string_to_bytes("hello".to_string());
     let original_length = start_bytes.len()*8;
+    //extra 1000 0000 at the end of the message bytes
     start_bytes.push(128 as u8);
 
+    //find padding size
     let current_len = 8 * start_bytes.len() ;
     let extra = find_num((current_len  + 64) as u32, 512);
 
+    //pad out
     for _ix in 0..(extra / 8) {
         start_bytes.push(0u8);
     }
+    //original length as 64 bits
     start_bytes.append(&mut (original_length as u64).to_be_bytes().to_vec());
 
+    //512 bit blocks
     let chunks = make_16x32_blocks(&start_bytes);
     dump_chunks(&chunks);
     println!("{}", &start_bytes.len()*8);
