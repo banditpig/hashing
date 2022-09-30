@@ -18,6 +18,35 @@ use modular::*;
 //         0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
 //         0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
 
+pub fn rotl(x:u32, n: usize) -> u32{
+    (x << n) | (x >> 32 - n)
+}
+
+pub fn rotr(x:u32, n: usize) -> u32{
+    (x >> n) | (x << 32 - n)
+}
+pub fn shr(x: u32, n: usize) -> u32{
+    x >> n
+}
+pub fn ch(x: u32, y: u32, z: u32) -> u32{
+    (x & y) ^ ( !x & z)
+}
+pub fn maj(x: u32, y: u32, z: u32) -> u32 {
+    (x & y) ^ (x & z) ^ (y & z)
+}
+pub fn Σ0(x: u32) -> u32{
+    rotr(x, 2) ^ rotr(x, 13) ^ rotr(x, 22)
+}
+pub fn Σ1(x: u32) -> u32 {
+    rotr(x, 6) ^ rotr(x, 11) ^ rotr(x, 25)
+}
+pub fn σ0(x: u32) -> u32 {
+    rotr(x, 7) ^ rotr(x, 18) ^ (x >> 3)
+}
+pub fn σ1(x: u32) -> u32{
+    rotr(x, 17) ^ rotr(x, 19) ^ (x >> 10)
+}
+
 pub fn dump(v: &Vec<u8>){
     let mut iy = 0;
     while iy < v.len() {
@@ -68,7 +97,10 @@ pub fn make_16x32_blocks(bytes: &Vec<u8>) -> Vec<Vec<u32>>{
     result
 }
 
+
 fn main() {
+
+
     //bytes from the message
     let mut start_bytes = string_to_bytes("hello".to_string());
     let original_length = start_bytes.len()*8;
@@ -89,6 +121,6 @@ fn main() {
     //512 bit blocks
     let chunks = make_16x32_blocks(&start_bytes);
     dump_chunks(&chunks);
-    println!("{}", &start_bytes.len()*8);
+    println!("{}", &start_bytes.len() * 8);
 
 }
