@@ -3,6 +3,7 @@ use crate::{ch, find_num, maj, make_16x32_blocks, s0, s1, string_to_bytes, K, S0
 
 fn create_chunks(s: String) -> Vec<Vec<u32>> {
     //bytes from the message
+
     let mut start_bytes = string_to_bytes(s);
     //empty string -> e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
     let original_length = start_bytes.len() * 8;
@@ -99,8 +100,41 @@ pub fn sha256(s: String) -> String {
     }
     let mut res = String::new();
     for u in [H0, H1, H2, H3, H4, H5, H6, H7] {
-        let x = &format!("{:x}", u);
+        let x = &format!("{:08x}", u);
         res += x;
     }
+
     res
 }
+#[cfg(test)]
+mod tests {
+    use crate::{s1, sha256};
+
+    #[test]
+    pub fn sha256_test() {
+        let mut s = "".to_string();
+        assert_eq!(
+            sha256(s),
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        );
+        //
+        s = "hello world".to_string();
+        assert_eq!(
+            sha256(s),
+            "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+        );
+
+        s = "!@£$%%^&**()-=".to_string();
+        assert_eq!(
+            sha256(s),
+            "842bef3825efe57acf0192f04b78be9d859ae977f6a4ab5eb17c63fc0dedabcd"
+        );
+
+        s = "Aenean quis lobortis arcu, eleifend consectetur urna. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse feugiat sed ligula finibus ornare. Donec dignissim sollicitudin magna, at suscipit quam scelerisque nec. Suspendisse lacinia velit non varius sollicitudin. Nullam eget semper nunc. Quisque vitae quam erat. Cras nec purus pulvinar, semper nibh sed, imperdiet arcu. Mauris mattis nisi dictum, vestibulum mauris nec, imperdiet libero. Praesent vitae lorem sollicitudin, vestibulum ante a, faucibus odio. Nam id convallis magna. Fusce sapien mauris, dapibus nec velit vel, efficitur tempor eros. Nunc et massa condimentum, vehicula neque eget, condimentum orci. Morbi pretium cursus lorem, a interdum arcu eleifend eu. Donec id risus dolor.".to_string();
+        assert_eq!(
+            sha256(s),
+            "af7e27521dea753fdf274cb66e81293d45edf9c3f18eef43beb3b32aafecd802"
+        );
+    }
+}
+//
