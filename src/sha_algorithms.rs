@@ -108,7 +108,8 @@ pub fn sha256(s: String) -> String {
 }
 #[cfg(test)]
 mod tests {
-    use crate::{s1, sha256};
+    use crate::sha_algorithms::sha256;
+    // use crate::{s1, sha256};
 
     #[test]
     pub fn sha256_test() {
