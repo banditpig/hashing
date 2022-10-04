@@ -8,7 +8,7 @@ fn create_chunks(s: String) -> Vec<Vec<u32>> {
     //empty string -> e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
     let original_length = start_bytes.len() * 8;
     //extra 1000 0000 at the end of the message bytes
-    start_bytes.push(128 as u8);
+    start_bytes.push(128_u8);
 
     //find padding size
     let current_len = 8 * start_bytes.len();
@@ -21,10 +21,9 @@ fn create_chunks(s: String) -> Vec<Vec<u32>> {
     start_bytes.append(&mut (original_length as u64).to_be_bytes().to_vec());
 
     //512 bit blocks
-    let chunks = make_16x32_blocks(&start_bytes);
-    chunks
+    make_16x32_blocks(&start_bytes)
 }
-fn init_w(chunk: &Vec<u32>) -> Vec<u32> {
+fn init_w(chunk: &[u32]) -> Vec<u32> {
     let mut w: Vec<u32> = vec![];
     for t in 0..64 {
         if t <= 15 {
@@ -53,9 +52,7 @@ pub fn sha256(s: String) -> String {
     let mut H6: u32 = 0x1f83d9ab;
     let mut H7: u32 = 0x5be0cd19;
 
-    for i in 0..chunks.len() {
-        let chunk = &chunks[i];
-
+    for chunk in &chunks {
         let w = init_w(chunk);
 
         let mut a = H0;

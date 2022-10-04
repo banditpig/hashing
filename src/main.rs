@@ -10,7 +10,6 @@ use crate::sha_algorithms::sha256;
 use crate::word_utils::{ch, maj, s0, s1, K, S0, S1};
 use clap::Parser;
 use std::error::Error;
-use std::fs::read;
 
 /// Utility to calculate hashes.
 #[derive(Parser, Debug)]
